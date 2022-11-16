@@ -25,7 +25,6 @@ class shodanSearch(Module):
     })    
 
     def run(self):
-        TABLE_DATA = []
         host = self.config.option('HOST_IP').value
         print("\n""Analyzing '%s'..." % (host))
         # Lookup an IP
@@ -33,12 +32,11 @@ class shodanSearch(Module):
 
         #host
         infos = ("HOST", host)
-        TABLE_DATA.append(infos)
-
+        TABLE_DATA = [infos]
         #asn
         infos = ("ASN", ipinfo['asn'])
         TABLE_DATA.append(infos)
-        
+
         #domain
         hostnames =  ipinfo['hostnames']
         newStringHostnames = ','.join(str(x) for x in hostnames)
@@ -49,7 +47,6 @@ class shodanSearch(Module):
         infos = ("ORG", ipinfo['org'])
         TABLE_DATA.append(infos)
 
-         #ISP
         infos = ("ISP", ipinfo['isp'])
         TABLE_DATA.append(infos)
 
@@ -60,9 +57,9 @@ class shodanSearch(Module):
         TABLE_DATA.append(infos)
 
         if "vulns" in ipinfo:
-            vulns =  ipinfo['vulns'][0:5]
+            vulns = ipinfo['vulns'][:5]
             newStringVulns = ','.join(str(x) for x in vulns)
-            infos = ("VULNERABILITIES", newStringVulns + " and more...")
+            infos = "VULNERABILITIES", f"{newStringVulns} and more..."
             TABLE_DATA.append(infos)
 
         #modules/service
@@ -73,7 +70,7 @@ class shodanSearch(Module):
         services = ','.join(modules)
         infos = ("SERVICES", services)
         TABLE_DATA.append(infos)    
-      
+
         # raw_json = json.dumps(
         #     ipinfo,
         #     sort_keys=True,

@@ -30,10 +30,7 @@ class twitterFollowerSearch(Module):
 
         tweets = twint.output.tweets_list
 
-        followers = []
-
-        for tweet in tweets:
-                followers.append(('{}'.format(tweet.username)))
+        followers = [f'{tweet.username}' for tweet in tweets]
 
         print(followers)
 

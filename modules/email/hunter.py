@@ -33,10 +33,8 @@ class hunterEmail(Module):
         url = f'https://api.hunter.io/v2/domain-search?domain={domain}&api_key={self.HUNTER_API_KEY}'
         response = requests.get(url)
         json_response = response.json()
-     
-        emails_list = json_response['data']['emails']
 
-        if emails_list:
+        if emails_list := json_response['data']['emails']:
             print("\nExtracted Emails:: ")
             info = ("Email", "First Name", "Last Name", "Position", "Phone", "Linkedin", "Twitter")
             TABLE_DATA.append(info)

@@ -22,15 +22,12 @@ class ethereumBalance(Module):
 
      
     def run(self):
-        TABLE_DATA = []
-        TABLE_DATAS = []
         address = self.config.option('ADDRESS').value
-        url = "https://api.ethplorer.io/getAddressInfo/"+ address + "?apiKey=freekey"
+        url = f"https://api.ethplorer.io/getAddressInfo/{address}?apiKey=freekey"
         response=requests.get(url)
         r = json.loads(response.content)
         infos = ("ADDRESS", r['address'])
-        TABLE_DATA.append(infos)
-
+        TABLE_DATA = [infos]
         infos = ("BALANCE", r['ETH']['balance'])
         TABLE_DATA.append(infos)
 
@@ -39,13 +36,10 @@ class ethereumBalance(Module):
 
         result = r['tokens']
         infos = ("TOKEN", "BALANCE", "TOTAL IN", "TOTAL OUT")
-        TABLE_DATAS.append(infos)
-        count = 1
-        for key in result:
+        TABLE_DATAS = [infos]
+        for count, key in enumerate(result, start=1):
             infos = (key['tokenInfo']['symbol'], key['balance'], key['totalIn'], key['totalOut'])
             TABLE_DATAS.append(infos)
-            count +=1
-
         table = SingleTable(TABLE_DATA, "ETH")
         print("\n"+table.table)    
 
@@ -74,15 +68,13 @@ class ethereumNameIdentifier(Module):
     })
 
     def run(self):
-        TABLE_DATA = []
         address = self.config.option('ADDRESS').value
-        url = "https://api.ensideas.com/ens/resolve/"+ address
+        url = f"https://api.ensideas.com/ens/resolve/{address}"
         response=requests.get(url)
         r = json.loads(response.content)
 
         infos = ("ADDRESS", r['address'])
-        TABLE_DATA.append(infos)
-
+        TABLE_DATA = [infos]
         infos = ("NAME", r['name'])
         TABLE_DATA.append(infos)
 

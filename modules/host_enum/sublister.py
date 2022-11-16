@@ -33,7 +33,7 @@ class sublister(Module):
     def run(self):
         domain = self.config.option('DOMAIN').value
         no_threads = self.config.option('NO_THREADS').value
-        save_file = domain + "_" +self.config.option('SAVEFILE').value
+        save_file = f"{domain}_" + self.config.option('SAVEFILE').value
         verbose = self.config.option('VERBOSE').value
         print("\n"" Analyzing '%s'..." % (domain))
         subdomains = sublist3r.main(domain, no_threads, save_file, ports= None, silent=False, verbose= verbose, enable_bruteforce= False, engines=None)

@@ -26,17 +26,12 @@ class DomainHistory(Module):
         apiHeader = { "apikey": apiKey }
         r = requests.get(self.API_URL + targetDomain + "/dns/a", headers=apiHeader)
         d = r.json()
-        
-        tblOutput = []
-        th = ('First Seen','Organization','Last Seen','IP')
-        tblOutput.append(th)
 
+        th = ('First Seen','Organization','Last Seen','IP')
+        tblOutput = [th]
         for rec in d["records"]:
 
-            ips = []
-            for rv in rec['values']:
-                ips.append(rv['ip'])
-            
+            ips = [rv['ip'] for rv in rec['values']]
             td = (rec['first_seen'],','.join(rec['organizations']),rec['last_seen'],', '.join(ips))
             tblOutput.append(td)
 

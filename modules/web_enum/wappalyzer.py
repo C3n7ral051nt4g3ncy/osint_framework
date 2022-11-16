@@ -17,19 +17,16 @@ class wappalyzer(Module):
     })    
 
     def run(self):
-        TABLE_DATA = []
         wappalyzer = Wappalyzer.latest()
         url = self.config.option('URL').value
         print("\n""Analyzing '%s'..." % (url))
         webpage = WebPage.new_from_url(url)
         results = wappalyzer.analyze(webpage)
         infos = ("URL", url)
-        TABLE_DATA.append(infos)
-        count = 1
-        for i in results:
+        TABLE_DATA = [infos]
+        for count, i in enumerate(results, start=1):
             infos = (count, i)
             TABLE_DATA.append(infos)
-            count +=1
         table = SingleTable(TABLE_DATA, "RESULTS")
         print("\n"+table.table)    
         

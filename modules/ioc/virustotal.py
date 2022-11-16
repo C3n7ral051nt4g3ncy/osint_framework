@@ -19,10 +19,9 @@ class virusTotalUrlScan(Module):
     })    
 
     def run(self):
-        TABLE_DATA = []
         # ROOT_DIR = os.path.abspath(os.curdir)
         VT_API = os.getenv('VT_API')
-        if(VT_API == ""):
+        if (VT_API == ""):
             print(".env VT_API are empty")
         else:
             url = self.config.option('URL').value
@@ -31,16 +30,15 @@ class virusTotalUrlScan(Module):
             url_id = vt.url_id(url)
             url_vt = client.get_object("/urls/{}", url_id)
             print("\n""Analyzing '%s'..." % (url))
-            
+
             infos = ("URL", url)
-            TABLE_DATA.append(infos)
-            
+            TABLE_DATA = [infos]
             infos = ("HARMLESS", url_vt.last_analysis_stats['harmless'])
             TABLE_DATA.append(infos)
-            
+
             infos = ("MALICIOUS",  url_vt.last_analysis_stats['malicious'])
             TABLE_DATA.append(infos)
-                
+
             infos = ("SUSPICIOUS",  url_vt.last_analysis_stats['suspicious'])
             TABLE_DATA.append(infos)
 

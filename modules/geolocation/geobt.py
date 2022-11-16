@@ -25,7 +25,11 @@ class GeoBluetooth(Module):
         userToken = f"{API_NAME}:{API_KEY}"
         BasicAuth = b64encode(userToken.encode("utf-8"))
         BasicAuth = BasicAuth.decode("utf-8")
-        authHeaders = { 'Authorization': 'Basic ' + BasicAuth, 'Accept': 'application/json'}
+        authHeaders = {
+            'Authorization': f'Basic {BasicAuth}',
+            'Accept': 'application/json',
+        }
+
 
         blueTooth = self.config.option('BLUETOOTH_BSSID').value
 
@@ -35,22 +39,15 @@ class GeoBluetooth(Module):
 
         print ("Searching...")
 
-        btURL = "https://api.wigle.net/api/v2/bluetooth/detail?netid=" + blueTooth
+        btURL = f"https://api.wigle.net/api/v2/bluetooth/detail?netid={blueTooth}"
         r = requests.get(btURL,headers=authHeaders)
         rep = r.json()
 
-        # print(self._debug(rep))
-
-        btInfo = []
-        btLocation = []
-
         # Header Init
         th = ('Key', 'Value')
-        btInfo.append(th)
-
+        btInfo = [th]
         th = ('Seen','Coordinates','Accuracy')
-        btLocation.append(th)
-        
+        btLocation = [th]
         if len(rep['results']) < 1:
             print ("Result not found.")
 
@@ -63,7 +60,7 @@ class GeoBluetooth(Module):
 
             td = ('Coordinates',f"{el['trilat']} , {el['trilong']}")
             btInfo.append(td)
-            
+
             td = ('Location',f"{el['road']} {el['city']}, {el['country']}")
             btInfo.append(td)
 
@@ -96,7 +93,8 @@ class GeoBluetooth(Module):
         print(colorful)
 
     def _formatCheck(self,entry):
-        if re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", entry.lower()):
-            return True
-
-        return False
+        return bool(
+            re.match(
+                "[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", entry.lower()
+            )
+        )

@@ -37,37 +37,48 @@ class GeoWifi(Module):
         BasicAuth = BasicAuth.decode("utf-8")
 
         WifiSSID = self.config.option('WIRELESS_SSID').value
-        authHeaders = { 'Authorization': 'Basic ' + BasicAuth, 'Accept': 'application/json'}
+        authHeaders = {
+            'Authorization': f'Basic {BasicAuth}',
+            'Accept': 'application/json',
+        }
+
 
         print("Searching...")
 
         wifiUrl = self._requestWifiBSSID(WifiSSID)
 
-        authHeaders = { 'Authorization': 'Basic ' + BasicAuth, 'Accept': 'application/json'}
+        authHeaders = {
+            'Authorization': f'Basic {BasicAuth}',
+            'Accept': 'application/json',
+        }
+
         r = requests.get(wifiUrl, headers=authHeaders)
         if r.status_code == 429:
             print("[-] Too many requests, try again later or have a new API key")
             return 
 
-        # self._debug(r.json())
-
-        tblDetails = []
         rep = r.json()
 
         title = f"SSID: {WifiSSID}"
         th = ('Key','Value')
-        tblDetails.append(th)
-        
+        tblDetails = [th]
         if rep["resultCount"] < 0:
             print("[-] SSID Information not found.")
             return
 
-        tblGeo = []
         th = ('Last Update','MAC','Encryption','Channel','Location', 'Coordinates')
-        tblGeo.append(th)
-
-        for el in rep["results"]:
-            tblGeo.append((el["lastupdt"],f"{el['netid']}",f"{el['encryption']}",f"{el['channel']}",f"{el['road']} {el['city']} {el['region']}, {el['country']}",f"{el['trilat']} , {el['trilong']}"))
+        tblGeo = [th]
+        tblGeo.extend(
+            (
+                el["lastupdt"],
+                f"{el['netid']}",
+                f"{el['encryption']}",
+                f"{el['channel']}",
+                f"{el['road']} {el['city']} {el['region']}, {el['country']}",
+                f"{el['trilat']} , {el['trilong']}",
+            )
+            for el in rep["results"]
+        )
 
         self._print(title,tblGeo)
 
@@ -97,9 +108,7 @@ class GeoWifi(Module):
 
     def _last6Mon(self):
         six_months = date.today() + relativedelta(months=-6)
-        ret = six_months.strftime("%Y%m%d") + "000000"
-        
-        return ret
+        return six_months.strftime("%Y%m%d") + "000000"
 
     def _requestWifiBSSID(self,ssid):
         url = "https://api.wigle.net/api/v2/network/search?onlymine=false&"

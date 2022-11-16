@@ -22,8 +22,6 @@ class iplookup(Module):
 
         print("\n"" Locating '%s'..." % (ip))
 
-        TABLE_DATA = []
-
         url = "http://ip-api.com/json/"
         data = requests.get(url+ip).content.decode('utf-8')
         values = json.loads(data)
@@ -35,7 +33,8 @@ class iplookup(Module):
 
         else:
             infos = ("IP", ip)
-            TABLE_DATA.append(infos)
+            TABLE_DATA = [infos]
+
             infos = ("ISP", values['isp'])
             TABLE_DATA.append(infos)
             infos = ("Organisation", values['org'])
@@ -51,7 +50,7 @@ class iplookup(Module):
             localisation = str(values['lat'])+', '+str(values['lon'])
             infos = ("Localisation", localisation)
             TABLE_DATA.append(infos)
-            infos = ("Maps", "https://www.google.com/maps?q="+localisation)
+            infos = "Maps", f"https://www.google.com/maps?q={localisation}"
             TABLE_DATA.append(infos)
 
             table = SingleTable(TABLE_DATA, ip)

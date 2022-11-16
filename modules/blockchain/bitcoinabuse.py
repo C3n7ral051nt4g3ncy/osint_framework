@@ -23,16 +23,15 @@ class bitcoinAbuse(Module):
     })
      
     def run(self):
-        TABLE_DATA = []
         TABLE_RECENT = []
         address = self.config.option('ADDRESS').value
-        url = "https://www.bitcoinabuse.com/api/reports/check?address=" + address + "&api_token=" + self.API
+        url = f"https://www.bitcoinabuse.com/api/reports/check?address={address}&api_token={self.API}"
+
         response=requests.get(url)
         r = json.loads(response.content)
-        
-        infos = ("ADDRESS", r['address'])
-        TABLE_DATA.append(infos)
 
+        infos = ("ADDRESS", r['address'])
+        TABLE_DATA = [infos]
         infos = ("COUNT", r['count'])
         TABLE_DATA.append(infos)
 

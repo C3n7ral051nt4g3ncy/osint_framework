@@ -17,7 +17,7 @@ class dnsRecords(Module):
     def run(self):
         domain = self.config.option('DOMAIN').value
         print("\n"" Analyzing '%s'..." % (domain))
-        request = requests.get("https://api.hackertarget.com/dnslookup/?q=" + domain)
+        request = requests.get(f"https://api.hackertarget.com/dnslookup/?q={domain}")
         res = request.text
         print("\n", res)
 

@@ -18,7 +18,7 @@ class dnsHost(Module):
     def run(self):
         domain = self.config.option('DOMAIN').value
         print("\n"" Analyzing '%s'..." % (domain))
-        request = requests.get("https://api.hackertarget.com/hostsearch/?q=" + domain)
+        request = requests.get(f"https://api.hackertarget.com/hostsearch/?q={domain}")
         res = request.text
         print("\n", res)
         
